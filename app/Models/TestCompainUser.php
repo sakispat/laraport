@@ -3,17 +3,16 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\TestCompain;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TestCompain extends Model
+class TestCompainUser extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'address',
-        'phone',
+        'user_id',
+        'test_compain_id',
     ];
 }

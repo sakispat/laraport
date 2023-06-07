@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+use Exception;
 use App\Models\TestCompain;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Exception;
+use App\Http\Resources\TestCompainResource;
 
 class TestCompainController extends Controller
 {
@@ -59,37 +60,25 @@ class TestCompainController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        $compain = TestCompain::find($id);
-
-        if(is_null($compain)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Compain not found'
-            ], 401);
-        }
+        $compain = TestCompain::findOrFail($id);
+        $response = new TestCompainResource($compain);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Show compain data',
-            'compain' => $compain,
+            'compain' => $response,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|min:5|max:255',
-            'address' => 'required|max:255',
-            'phone' => 'required|min:10|max:15',
-        ]);
-
-        $compain = TestCompain::find($id);
-        $compain->update($request->all());
+        $compain = TestCompain::findOrFail($id);
+        $compain->update($request->only(['name', 'address', 'phone']));
         $compain->save();
 
         return response()->json([
@@ -102,9 +91,9 @@ class TestCompainController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $compain = TestCompain::find($id);
+        $compain = TestCompain::findOrFail($id);
         $compain->delete();
 
         return response()->json([
