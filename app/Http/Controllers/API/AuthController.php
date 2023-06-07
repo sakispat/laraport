@@ -52,7 +52,7 @@ class AuthController extends Controller
         }catch(JWTException $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Could not create token'
+                'message' => $err
             ], 500);
         }
 

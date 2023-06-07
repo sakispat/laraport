@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Models\TestCompain;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Exception;
 
 class TestCompainController extends Controller
 {
@@ -13,20 +14,22 @@ class TestCompainController extends Controller
      */
     public function index()
     {
-        $compains = TestCompain::all();
+        try {
+            $compains = TestCompain::all();
 
-        if(is_null($compains)) {
+            if($compains) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'All comapains view data',
+                    'compains' => $compains
+                ], 200);
+            }
+        }catch(Exception $err) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Compain not found'
-            ], 401);
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'All comapains view data',
-            'compain' => $compains,
-        ]);
     }
 
     /**
