@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TestCompainController;
 
 /*
@@ -22,6 +23,7 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('logout', 'logout');
 });
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('jwt.auth:api')->group(function () {
+    Route::get('myaccount', [UserController::class, 'myaccount']);
     Route::resource('testcompains', TestCompainController::class);
 });

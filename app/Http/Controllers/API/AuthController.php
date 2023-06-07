@@ -4,9 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResources;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -28,7 +30,7 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'User registred successfully',
             'user' => $user,
-        ]);
+        ], 200);
     }
 
     public function login(Request $request)
@@ -39,22 +41,26 @@ class AuthController extends Controller
         ]);
 
         $data = $request->only('email', 'password');
-        $token = Auth::attempt($data);
-        $user = Auth::user();
 
-        if (!$token) {
+        try {
+            if (!$token = JWTAuth::attempt($data)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Login Failed'
+                ], 400);
+            }
+        }catch(JWTException $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Login Failed'
-            ]);
+                'message' => 'Could not create token'
+            ], 500);
         }
 
         return response()->json([
             'status' => 'success',
             'message' => 'Logged in successfully',
-            'user' => $user,
-            'token' => $token
-        ]);
+            compact('token')
+        ], 200);
     }
 
     public function logout()
@@ -62,6 +68,6 @@ class AuthController extends Controller
         Auth::logout();
         return response()->json([
             'message' => 'Successfully logged out',
-        ]);
+        ], 200);
     }
 }
