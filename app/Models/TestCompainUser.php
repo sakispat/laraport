@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+// use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TestCompainUser extends Model
 {
@@ -37,13 +38,13 @@ class TestCompainUser extends Model
         'test_compain_id' => 'integer',
     ];
 
-    public function testCompain(): BelongsTo
+    public function testCompain(): HasOne
     {
-        return $this->belongsTo(TestCompain::class);
+        return $this->hasOne(TestCompain::class);
     }
 
-    public function user(): BelongsTo
+    public function user(): HasOne
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class);
     }
 }

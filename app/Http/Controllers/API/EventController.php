@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Exception;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 
@@ -110,7 +111,7 @@ class EventController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Create compain data',
+            'message' => 'Create event data',
             'event' => $event,
         ]);
     }
@@ -121,12 +122,24 @@ class EventController extends Controller
     public function show($id)
     {
         $event = Event::findOrFail($id);
-        $response = new EventResource($event);
+        $query = DB::select(
+            "
+                SELECT etli.id, etli.event_id, etli.topic_id, etli.lesson_id, etli.instructor_id,
+                l.title as 'lesson_title', t.title as 'topic_title',
+                t.summary as 'topic_title', i.title as 'instructor_title',
+                i.subtitle as 'instructor_subtitle'
+                FROM `event_topic_lesson_instructors` etli
+                LEFT JOIN lessons l ON etli.lesson_id = l.id
+                LEFT JOIN topics t ON etli.topic_id = t.id
+                LEFT JOIN instructors i ON etli.instructor_id = i.id
+                WHERE etli.event_id = $id;
+            "
+        );
 
         return response()->json([
             'status' => 'success',
             'message' => 'Show event data',
-            'event' => $response,
+            'event' => $query,
         ]);
     }
 

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\EventController;
+use App\Http\Controllers\API\EventUserController;
 use App\Http\Controllers\API\TopicController;
 use App\Http\Controllers\API\LessonController;
 use App\Http\Controllers\API\InstructorController;
@@ -37,4 +38,5 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('instructors', InstructorController::class);
     Route::resource('lessons', LessonController::class);
     Route::resource('topics', TopicController::class);
+    Route::resource('eventusers', EventUserController::class);
 });

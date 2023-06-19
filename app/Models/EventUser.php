@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EventUser extends Model
 {
@@ -43,13 +44,13 @@ class EventUser extends Model
         'paid' => 'integer',
     ];
 
-    public function event(): BelongsTo
+    public function events(): HasMany
     {
-        return $this->belongsTo(Event::class);
+        return $this->hasMany(Event::class);
     }
 
-    public function user(): BelongsTo
+    public function user(): HasOne
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class);
     }
 }
